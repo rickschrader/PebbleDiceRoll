@@ -12,12 +12,16 @@ PBL_APP_INFO(MY_UUID,
 
 Window window;
 
+#define TIME_ZONE_OFFSET -5
+#define DEFAULT_MAX_NUMBER 100
+#define UPPER_LIMIT 1000
+#define LOWER_LIMIT 1
+
 TextLayer maxNumberPromptLayer;
 TextLayer maxNumberValueLayer;
 TextLayer randomNumberLayer;
-int maxNumber = 100;
+int maxNumber = DEFAULT_MAX_NUMBER;
 long randSeed;
-#define TIME_ZONE_OFFSET -5
 
 int get_unix_time_from_current_time(PblTm *current_time)
 {
@@ -53,17 +57,20 @@ int random(int max)
 
 void displayRandom()
 {
-	char* randomNumString = "";
+	char* randomNumString = "2147483647";
+	//Updating a character array based on pointer (theoretically pointing to a literal) is "undefined",
+	//	but this is the only way I've gotten this to work correctly so far
 	xsprintf(randomNumString, "%d", random(maxNumber));
 	text_layer_set_text(&randomNumberLayer, randomNumString);
 }
 
 void displayMaxNumber()
 {
-	//char* maxNumString = "";
-	//xsprintf(maxNumString, "%d", maxNumber);
-	//text_layer_set_text(&maxNumberValueLayer, maxNumString);
-	text_layer_set_text(&maxNumberValueLayer, "Test");
+	char* maxNumString = "1234567890";
+	//Updating a character array based on pointer (theoretically pointing to a literal) is "undefined",
+	//	but this is the only way I've gotten this to work correctly so far
+	xsprintf(maxNumString, "%d", maxNumber);
+	text_layer_set_text(&maxNumberValueLayer, maxNumString);
 }
 
 
@@ -71,6 +78,11 @@ void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
 	(void)recognizer;
 	(void)window;
 
+	if (maxNumber+1 <= UPPER_LIMIT)
+	{
+		maxNumber = maxNumber + 1;
+		displayMaxNumber();
+	}
 }
 
 
@@ -78,6 +90,11 @@ void down_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
 	(void)recognizer;
 	(void)window;
 
+	if (maxNumber-1 >= LOWER_LIMIT)
+	{
+		maxNumber = maxNumber - 1;
+		displayMaxNumber();
+	}
 }
 
 
@@ -93,6 +110,8 @@ void select_long_click_handler(ClickRecognizerRef recognizer, Window *window) {
 	(void)recognizer;
 	(void)window;
 
+	maxNumber = DEFAULT_MAX_NUMBER;
+	displayMaxNumber();
 }
 
 void click_config_provider(ClickConfig **config, Window *window) {
@@ -113,7 +132,7 @@ void click_config_provider(ClickConfig **config, Window *window) {
 void handle_init(AppContextRef ctx) {
 	(void)ctx;
 
-	window_init(&window, "Font Viewer");
+	window_init(&window, "Dice Roll");
 	window_stack_push(&window, true /* Animated */);
 	window_set_background_color(&window, GColorBlack);
 
@@ -122,22 +141,26 @@ void handle_init(AppContextRef ctx) {
 	text_layer_init(&randomNumberLayer, window.layer.frame);
 	text_layer_set_text_color(&randomNumberLayer, GColorWhite);
   	text_layer_set_background_color(&randomNumberLayer, GColorClear);
-  	layer_set_frame(&randomNumberLayer.layer, GRect(8, 10, 144-8, 168-68));
-  	text_layer_set_font(&randomNumberLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
+  	layer_set_frame(&randomNumberLayer.layer, GRect(0, 10, 144, 168-68));
+  	//text_layer_set_font(&randomNumberLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
+  	text_layer_set_font(&randomNumberLayer, fonts_get_system_font(FONT_KEY_GOTHAM_42_BOLD));
+	text_layer_set_text_alignment(&randomNumberLayer, GTextAlignmentCenter);
 	layer_add_child(&window.layer, &randomNumberLayer.layer);
 
 	text_layer_init(&maxNumberPromptLayer, window.layer.frame);
 	text_layer_set_text_color(&maxNumberPromptLayer, GColorWhite);
   	text_layer_set_background_color(&maxNumberPromptLayer, GColorClear);
-  	layer_set_frame(&maxNumberPromptLayer.layer, GRect(7, 70, 144-7, 168-92));
+  	layer_set_frame(&maxNumberPromptLayer.layer, GRect(0, 70, 144, 168-92));
   	text_layer_set_font(&maxNumberPromptLayer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+	text_layer_set_text_alignment(&maxNumberPromptLayer, GTextAlignmentCenter);
 	layer_add_child(&window.layer, &maxNumberPromptLayer.layer);
 
 	text_layer_init(&maxNumberValueLayer, window.layer.frame);
 	text_layer_set_text_color(&maxNumberValueLayer, GColorWhite);
   	text_layer_set_background_color(&maxNumberValueLayer, GColorClear);
-  	layer_set_frame(&maxNumberValueLayer.layer, GRect(7, 92, 144-7, 168-92));
+  	layer_set_frame(&maxNumberValueLayer.layer, GRect(0, 92, 144, 168-92));
   	text_layer_set_font(&maxNumberValueLayer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+	text_layer_set_text_alignment(&maxNumberValueLayer, GTextAlignmentCenter);
 	layer_add_child(&window.layer, &maxNumberValueLayer.layer);
 
 	

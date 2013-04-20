@@ -1,1 +1,9 @@
-A simple dice roller app for Pebble watch.  Right now, it generates a random number between 1 and 100 when you press the select button.  In the future, I hope to add the ability to set the max number, possibly to a limited set of options (4, 6, 8, 10, 12, 20, 100, etc), using the up and down buttons.
+A simple dice roller app for Pebble watch.  
+
+The buttons perform the following functions:
+Select - generates a random number between 1 and the max number
+Up - increases the max number by 1 (up to the current limit of 1000)
+Down - decreases the max number by 1 (down to the limit of 1)
+Long press on select - resets the max number to the default (100)
+
+In the future, I may change the max numbers so that it only allows a limited set of options (4, 6, 8, 10, 12, 20, 100, etc), more closely aligned to the sides on real dice.
