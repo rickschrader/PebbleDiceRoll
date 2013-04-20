@@ -1,13 +1,13 @@
-# project  configured on Sat Apr 20 11:38:41 2013 by
+# project  configured on Sat Apr 20 15:06:54 2013 by
 # waf 1.7.0 (abi 98, python 20704f0 on darwin)
 # using ./waf configure
 #
 ----------------------------------------
 Setting top to
-/Users/Rick/pebble-dev/myprojects/diceroll
+/Users/Rick/pebble-dev/myprojects/PebbleDiceRoll
 ----------------------------------------
 Setting out to
-/Users/Rick/pebble-dev/myprojects/diceroll/build
+/Users/Rick/pebble-dev/myprojects/PebbleDiceRoll/build
 ----------------------------------------
 Checking for program gcc,cc
 arm-none-eabi-gcc

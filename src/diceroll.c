@@ -12,7 +12,9 @@ PBL_APP_INFO(MY_UUID,
 
 Window window;
 
-TextLayer textLayer;
+TextLayer maxNumberPromptLayer;
+TextLayer maxNumberValueLayer;
+TextLayer randomNumberLayer;
 int maxNumber = 100;
 long randSeed;
 #define TIME_ZONE_OFFSET -5
@@ -51,10 +53,19 @@ int random(int max)
 
 void displayRandom()
 {
-	char* result = "";
-	xsprintf(result, "%d", random(maxNumber));
-	text_layer_set_text(&textLayer, result);
+	char* randomNumString = "";
+	xsprintf(randomNumString, "%d", random(maxNumber));
+	text_layer_set_text(&randomNumberLayer, randomNumString);
 }
+
+void displayMaxNumber()
+{
+	//char* maxNumString = "";
+	//xsprintf(maxNumString, "%d", maxNumber);
+	//text_layer_set_text(&maxNumberValueLayer, maxNumString);
+	text_layer_set_text(&maxNumberValueLayer, "Test");
+}
+
 
 void up_single_click_handler(ClickRecognizerRef recognizer, Window *window) {
 	(void)recognizer;
@@ -104,20 +115,39 @@ void handle_init(AppContextRef ctx) {
 
 	window_init(&window, "Font Viewer");
 	window_stack_push(&window, true /* Animated */);
+	window_set_background_color(&window, GColorBlack);
 
-	//resource_init_current_app(&FONT_DEMO_RESOURCES);
+	//resource_init_current_app(&APP_RESOURCES);
 
-	text_layer_init(&textLayer, window.layer.frame);
+	text_layer_init(&randomNumberLayer, window.layer.frame);
+	text_layer_set_text_color(&randomNumberLayer, GColorWhite);
+  	text_layer_set_background_color(&randomNumberLayer, GColorClear);
+  	layer_set_frame(&randomNumberLayer.layer, GRect(8, 10, 144-8, 168-68));
+  	text_layer_set_font(&randomNumberLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
+	layer_add_child(&window.layer, &randomNumberLayer.layer);
+
+	text_layer_init(&maxNumberPromptLayer, window.layer.frame);
+	text_layer_set_text_color(&maxNumberPromptLayer, GColorWhite);
+  	text_layer_set_background_color(&maxNumberPromptLayer, GColorClear);
+  	layer_set_frame(&maxNumberPromptLayer.layer, GRect(7, 70, 144-7, 168-92));
+  	text_layer_set_font(&maxNumberPromptLayer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+	layer_add_child(&window.layer, &maxNumberPromptLayer.layer);
+
+	text_layer_init(&maxNumberValueLayer, window.layer.frame);
+	text_layer_set_text_color(&maxNumberValueLayer, GColorWhite);
+  	text_layer_set_background_color(&maxNumberValueLayer, GColorClear);
+  	layer_set_frame(&maxNumberValueLayer.layer, GRect(7, 92, 144-7, 168-92));
+  	text_layer_set_font(&maxNumberValueLayer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+	layer_add_child(&window.layer, &maxNumberValueLayer.layer);
+
 	
 	//Only set the seed once
 	randSeed = get_unix_time();	
 
+	text_layer_set_text(&maxNumberPromptLayer, "Max:");
+	displayMaxNumber();
 	displayRandom();
-	
-	text_layer_set_font(&textLayer, fonts_get_system_font(FONT_KEY_GOTHAM_30_BLACK));
-	layer_add_child(&window.layer, &textLayer.layer);
-
-	
+		
 	// Attach our desired button functionality
 	window_set_click_config_provider(&window, (ClickConfigProvider) click_config_provider);
 }
